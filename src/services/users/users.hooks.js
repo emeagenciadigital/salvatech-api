@@ -12,14 +12,14 @@ module.exports = {
     create: [ hashPassword('password') ],
     update: [ hashPassword('password') ],
     patch: [ hashPassword('password') ],
-    remove: [ authenticate('jwt') ]
+    remove: [ ]
   },
 
   after: {
     all: [ 
       // Make sure the password field is never sent to the client
       // Always must be the last hook
-      protect('password')
+      protect('password','otp_email_token','otp_phone_token')
     ],
     find: [],
     get: [],
