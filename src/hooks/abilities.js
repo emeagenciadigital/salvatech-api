@@ -1,5 +1,5 @@
 const {AbilityBuilder, createMongoAbility, Ability} = require('@casl/ability');
-const { createAliasResolver, makeAbilityFromRules } = require('feathers-casl');
+const {createAliasResolver, makeAbilityFromRules} = require('feathers-casl');
 
 const {toMongoQuery} = require('@casl/mongoose');
 const {Forbidden} = require('@feathersjs/errors');
@@ -10,6 +10,7 @@ const READ = 'read';
 const UPDATE = 'update';
 const DELETE = 'delete';
 const CREATE = 'create';
+const USERS = 'users';
 
 function subjectName(subject) {
   if (!subject || typeof subject === 'string') {
@@ -19,14 +20,20 @@ function subjectName(subject) {
   return subject[TYPE_KEY];
 }
 
-
-
 async function defineAbilitiesFor(user, context) {
-
   const {rules, can} = AbilityBuilder.extract();
+  const ROLE_ADMIN = 'admin';
 
+  const isAdmin = user && user.main_role === ROLE_ADMIN;
 
-  can('manage',['all'])
+  can(CREATE, ['authentication']);
+
+  if (isAdmin) {
+    can('manage', ['all']);
+  }
+
+  can(READ, [USERS]);
+  can('manage', [USERS]);
 
   if (process.env.NODE_ENV !== 'production') {
     // can('create', ['users']);
@@ -45,7 +52,6 @@ module.exports = function authorize(name = null) {
     const service = name ? hook.app.service(name) : hook.service;
     const serviceName = name || hook.path;
     const ability = await defineAbilitiesFor(hook.params.user, hook);
-
 
     const throwUnlessCan = (action, resource) => {
       if (ability.cannot(action, resource)) {

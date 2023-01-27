@@ -53,17 +53,28 @@
     "feathers-casl": "^0.7.2",
     "feathers-hooks-common": "^6.1.5",
     "feathers-knex": "^8.0.1",
+    "feathers-objection": "^7.5.3",
+    "feathers-swagger": "^2.0.0",
     "helmet": "^4.6.0",
     "knex": "^2.4.2",
     "mysql2": "^2.3.3",
+    "objection": "^3.0.1",
     "react-s3-uploader": "^5.0.0",
     "serve-favicon": "^2.5.0",
+    "swagger-ui-dist": "^4.15.5",
     "winston": "^3.8.2"
   },
   "devDependencies": {
     "axios": "^1.2.3",
     "eslint": "^8.31.0",
     "mocha": "^9.2.2",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "prettier": "2.8.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "jsxBracketSameLine": true,
+    "trailingComma": "all"
   }
 }

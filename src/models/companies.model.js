@@ -1,27 +1,58 @@
-/* eslint-disable no-console */
-
-// companies-model.js - A KnexJS
-// 
-// See http://knexjs.org/
+// See https://vincit.github.io/objection.js/#models
 // for more of what you can do here.
-module.exports = function (app) {
-  const db = app.get('knexClient');
-  const tableName = 'companies';
-  db.schema.hasTable(tableName).then(exists => {
-    if(!exists) {
-      db.schema.createTable(tableName, table => {
-        table.increments('id');
-        table.string('name');
-        table.enum('status',['active','inactive']).defaultTo('active')
-        table.timestamp("deletedAt").nullable();
-        table.timestamp("createdAt");
-        table.timestamp("updatedAt");
-      })
-        .then(() => console.log(`Created ${tableName} table`))
-        .catch(e => console.error(`Error creating ${tableName} table`, e));
-    }
-  });
-  
+const {Model} = require('objection');
 
-  return db;
+class Companies extends Model {
+  static get tableName() {
+    return 'companies';
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['name', 'status'],
+
+      properties: {
+        name: {type: 'string'},
+        status: {
+          type: 'string',
+          enum: ['active', 'inactive'],
+          default: 'active',
+        },
+      },
+    };
+  }
+
+  $beforeInsert() {
+    this.createdAt = this.updatedAt = new Date().toISOString();
+  }
+
+  $beforeUpdate() {
+    this.updatedAt = new Date().toISOString();
+  }
+}
+
+module.exports = function (app) {
+  const db = app.get('knex');
+
+  db.schema
+    .hasTable('companies')
+    .then((exists) => {
+      if (!exists) {
+        db.schema
+          .createTable('companies', (table) => {
+            table.increments('id');
+            table.string('name');
+            table.enum('status', ['active', 'inactive']).defaultTo('active');
+            table.timestamp('deletedAt').nullable();
+            table.timestamp('createdAt');
+            table.timestamp('updatedAt');
+          })
+          .then(() => console.log('Created companies table')) // eslint-disable-line no-console
+          .catch((e) => console.error('Error creating companies table', e)); // eslint-disable-line no-console
+      }
+    })
+    .catch((e) => console.error('Error creating companies table', e)); // eslint-disable-line no-console
+
+  return Companies;
 };

@@ -15,10 +15,13 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
+const swagger = require('feathers-swagger');
 
 const authentication = require('./authentication');
 
 const knex = require('./knex');
+
+const objection = require('./objection');
 
 const app = express(feathers());
 
@@ -39,8 +42,20 @@ app.use('/', express.static(app.get('public')));
 // Set up Plugins and providers
 app.configure(express.rest());
 app.configure(socketio());
-
+app.configure(swagger({
+  ui: swagger.swaggerUI({ docsPath: '/docs' }),
+  specs: {
+    info: {
+      title: 'A test',
+      description: 'A description',
+      version: '1.0.0',
+    },
+    schemes: ['http', 'https'] // Optionally set the protocol schema used (sometimes required when host on https)
+  }
+}))
 app.configure(knex);
+
+app.configure(objection);
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);

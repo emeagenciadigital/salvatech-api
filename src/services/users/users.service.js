@@ -15,5 +15,25 @@ module.exports = function (app) {
   // Get our initialized service so that we can register hooks
   const service = app.service('users');
 
+  service.docs = {
+    description: 'My service description',
+    definition: {
+      type: 'object',
+      required: [
+        'text'
+      ],
+      properties: {
+        text: {
+          type: 'string',
+          description: 'The message text'
+        },
+        userId: {
+          type: 'string',
+          description: 'The id of the user that send the message'
+        }
+      }
+    }
+  };
+
   service.hooks(hooks);
 };
