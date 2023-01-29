@@ -8,23 +8,39 @@ const {
   discard,
 } = require('feathers-hooks-common');
 const authenticate = require('./hooks/authenticate');
-const abilities = require("./hooks/abilities")
+const abilities = require('./hooks/abilities');
 
 module.exports = {
   before: {
-    all: [ when(
-      (hook) =>
-        hook.params.provider &&
-        `/${hook.path}` !== hook.app.get('authentication').path,
-      authenticate,
-      abilities(),
-    ),],
+    all: [
+      when(
+        (hook) =>
+          hook.params.provider &&
+          `/${hook.path}` !== hook.app.get('authentication').path,
+        authenticate,
+        abilities(),
+      ),
+      softDelete({
+        // context is the normal hook context
+        deletedQuery: async (context) => {
+          return {deletedAt: null};
+        },
+        removeData: async (context) => {
+          return {deletedAt: new Date()};
+        },
+      }),
+    ],
     find: [],
     get: [],
-    create: [],
+    create: [
+      (context) => {
+        context.data.deletedAt = null;
+        console.log(context.data);
+      },
+    ],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   after: {
@@ -34,7 +50,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {
@@ -44,6 +60,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };
