@@ -2,8 +2,7 @@
 // For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
 
 const {checkContext, getItems, replaceItems} = require('feathers-hooks-common');
-const havePermissions = require('../../../hooks/have-permissions');
-const {ROLE_ADMIN} = require('../../../utils/constants');
+
 // eslint-disable-next-line no-unused-vars
 module.exports = function (options = {}) {
   // Return the actual hook.
@@ -18,13 +17,17 @@ module.exports = function (options = {}) {
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
 
-    const isAdmin = user.main_role === ROLE_ADMIN;
+    const getSkill = ({skill_id}) =>
+      context.app
+        .service('skills')
+        .getModel()
+        .query()
+        .where({id: skill_id})
+        .then((it) => it[0]);
 
-    await havePermissions({user_id: user.id, company_id: records.company_id})(
-      context,
-    );
+    const skill = await getSkill({skill_id: records.skill_id});
 
-    records.user_id = isAdmin ? records.user_id : user.id;
+    records.skill_name = skill.name;
 
     // Place the modified records back in the context.
     replaceItems(context, records);

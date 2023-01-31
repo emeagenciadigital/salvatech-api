@@ -10,7 +10,7 @@ class UsersSkills extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['user_id', 'skill_id', 'level'],
+      required: ['user_id', 'skill_id'],
 
       properties: {
         user_id: {type: 'integer'},

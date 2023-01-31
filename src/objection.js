@@ -10,7 +10,5 @@ module.exports = function (app) {
   });
   Model.knex(db);
 
-  console.log(db);
-
   app.set('knex', db);
 };

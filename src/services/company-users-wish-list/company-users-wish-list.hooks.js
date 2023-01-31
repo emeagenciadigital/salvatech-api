@@ -1,9 +1,13 @@
 const {fastJoin} = require('feathers-hooks-common');
+const {ROLE_ADMIN} = require('../../utils/constants');
+const registerCompanyId = require('./hooks/register-companyId');
 
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
-      if (records.company_id)
+      const {user} = context.params;
+      const isAdmin = user.main_role === ROLE_ADMIN;
+      if (isAdmin)
         records.company = await context.app
           .service('companies')
           .find({
@@ -11,7 +15,7 @@ const joinsResolves = {
             paginate: false,
           })
           .then((it) => it[0]);
-      if (records.user_id)
+      if (isAdmin)
         records.user = await context.app
           .service('users')
           .getModel()
@@ -37,7 +41,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [registerCompanyId()],
     update: [],
     patch: [],
     remove: [],
