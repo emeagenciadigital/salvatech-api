@@ -1,10 +1,12 @@
-const { Service } = require('feathers-knex');
+const { Service } = require('feathers-objection');
 
 exports.CompanyOnboardingFiles = class CompanyOnboardingFiles extends Service {
   constructor(options) {
+    const { Model, ...otherOptions } = options;
+
     super({
-      ...options,
-      name: 'company_onboarding_files'
+      ...otherOptions,
+      model: Model
     });
   }
 };
