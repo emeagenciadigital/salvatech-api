@@ -2,22 +2,20 @@
 // for more of what you can do here.
 const {Model} = require('objection');
 
-class RequestMembers extends Model {
+class RequestMemberSkills extends Model {
   static get tableName() {
-    return 'request_members';
+    return 'request_member_skills';
   }
 
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['company_id', 'user_id'],
+      required: ['request_members_id', 'skill_id'],
 
       properties: {
-        company_id: {type: 'integer'},
-        user_id: {type: 'integer'},
-        description: {type: 'string'},
-        role_name: {type: 'string'},
-        years_of_experience: {type: 'integer'},
+        request_members_id: {type: 'integer'},
+        skill_id: {type: 'integer'},
+        skill_name: {type: ['string', 'null']},
       },
     };
   }
@@ -35,38 +33,38 @@ module.exports = function (app) {
   const db = app.get('knex');
 
   db.schema
-    .hasTable('request_members')
+    .hasTable('request_member_skills')
     .then((exists) => {
       if (!exists) {
         db.schema
-          .createTable('request_members', (table) => {
+          .createTable('request_member_skills', (table) => {
             table.increments('id');
             table
-              .integer('company_id')
+              .integer('request_members_id')
               .unsigned()
               .references('id')
-              .inTable('companies')
+              .inTable('request_members')
               .index();
             table
-              .integer('user_id')
+              .integer('skill_id')
               .unsigned()
               .references('id')
-              .inTable('users')
+              .inTable('skills')
               .index();
-            table.text('description', 'longText');
-            table.string('role_name');
-            table.integer('years_of_experience');
+            table.string('skill_name');
             table.timestamp('deletedAt').nullable();
             table.timestamp('createdAt');
             table.timestamp('updatedAt');
           })
-          .then(() => console.log('Created request_members table')) // eslint-disable-line no-console
+          .then(() => console.log('Created request_member_skills table')) // eslint-disable-line no-console
           .catch((e) =>
-            console.error('Error creating request_members table', e),
+            console.error('Error creating request_member_skills table', e),
           ); // eslint-disable-line no-console
       }
     })
-    .catch((e) => console.error('Error creating request_members table', e)); // eslint-disable-line no-console
+    .catch((e) =>
+      console.error('Error creating request_member_skills table', e),
+    ); // eslint-disable-line no-console
 
-  return RequestMembers;
+  return RequestMemberSkills;
 };

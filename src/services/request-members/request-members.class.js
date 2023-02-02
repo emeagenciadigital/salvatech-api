@@ -1,10 +1,12 @@
-const { Service } = require('feathers-knex');
+const { Service } = require('feathers-objection');
 
 exports.RequestMembers = class RequestMembers extends Service {
   constructor(options) {
+    const { Model, ...otherOptions } = options;
+
     super({
-      ...options,
-      name: 'request_members'
+      ...otherOptions,
+      model: Model
     });
   }
 };

@@ -1,6 +1,6 @@
 const { Service } = require('feathers-objection');
 
-exports.Tasks = class Tasks extends Service {
+exports.RequestMemberSkills = class RequestMemberSkills extends Service {
   constructor(options) {
     const { Model, ...otherOptions } = options;
 
