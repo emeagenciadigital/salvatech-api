@@ -35,6 +35,7 @@ class Users extends Model {
         last_activity_date: {type: 'string'},
         about_me: {type: 'string'},
         website_url: {type: 'string'},
+        path_avatar: {type: ['string', 'null']},
         talent_pool_visibility: {type: 'string', enum: ['visible', 'hidden']},
         talent_vetted_status: {type: 'string', enum: ['vetted', 'not_vetted']},
         talent_pool_application_status: {
