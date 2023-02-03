@@ -1,10 +1,12 @@
-const { Service } = require('feathers-knex');
+const { Service } = require('feathers-objection');
 
 exports.TaskFiles = class TaskFiles extends Service {
   constructor(options) {
+    const { Model, ...otherOptions } = options;
+
     super({
-      ...options,
-      name: 'task_files'
+      ...otherOptions,
+      model: Model
     });
   }
 };

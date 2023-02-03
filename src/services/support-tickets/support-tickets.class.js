@@ -1,10 +1,12 @@
-const { Service } = require('feathers-knex');
+const { Service } = require('feathers-objection');
 
 exports.SupportTickets = class SupportTickets extends Service {
   constructor(options) {
+    const { Model, ...otherOptions } = options;
+
     super({
-      ...options,
-      name: 'support_tickets'
+      ...otherOptions,
+      model: Model
     });
   }
 };

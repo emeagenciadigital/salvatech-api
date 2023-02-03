@@ -1,37 +1,68 @@
-/* eslint-disable no-console */
-
-// support tickets-model.js - A KnexJS
-// 
-// See http://knexjs.org/
+// See https://vincit.github.io/objection.js/#models
 // for more of what you can do here.
-module.exports = function (app) {
-  const db = app.get('knexClient');
-  const tableName = 'support_tickets';
-  db.schema.hasTable(tableName).then(exists => {
-    if(!exists) {
-      db.schema.createTable(tableName, table => {
-        table.increments('id');
-        table.string('text');
-        table.integer('company_id')
-          .unsigned()
-          .references('id')
-          .inTable('companies')
-          .index();
-        table.integer('user_id')
-          .unsigned()
-          .references('id')
-          .inTable('users')
-          .index();
-        table.text('description','longText');
-        table.timestamp("deletedAt").nullable();
-        table.timestamp("createdAt");
-        table.timestamp("updatedAt");
-      })
-        .then(() => console.log(`Created ${tableName} table`))
-        .catch(e => console.error(`Error creating ${tableName} table`, e));
-    }
-  });
-  
+const {Model} = require('objection');
 
-  return db;
+class SupportTickets extends Model {
+  static get tableName() {
+    return 'support_tickets';
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['company_id', 'user_id'],
+
+      properties: {
+        company_id: {type: 'integer'},
+        user_id: {type: 'integer'},
+        description: {type: 'string'},
+      },
+    };
+  }
+
+  $beforeInsert() {
+    this.createdAt = this.updatedAt = new Date().toISOString();
+  }
+
+  $beforeUpdate() {
+    this.updatedAt = new Date().toISOString();
+  }
+}
+
+module.exports = function (app) {
+  const db = app.get('knex');
+
+  db.schema
+    .hasTable('support_tickets')
+    .then((exists) => {
+      if (!exists) {
+        db.schema
+          .createTable('support_tickets', (table) => {
+            table.increments('id');
+            table
+              .integer('company_id')
+              .unsigned()
+              .references('id')
+              .inTable('companies')
+              .index();
+            table
+              .integer('user_id')
+              .unsigned()
+              .references('id')
+              .inTable('users')
+              .index();
+            table.text('description', 'longText');
+            table.timestamp('deletedAt').nullable();
+            table.timestamp('createdAt');
+            table.timestamp('updatedAt');
+          })
+          .then(() => console.log('Created support_tickets table')) // eslint-disable-line no-console
+          .catch((e) =>
+            console.error('Error creating support_tickets table', e),
+          ); // eslint-disable-line no-console
+      }
+    })
+    .catch((e) => console.error('Error creating support_tickets table', e)); // eslint-disable-line no-console
+
+  return SupportTickets;
 };
