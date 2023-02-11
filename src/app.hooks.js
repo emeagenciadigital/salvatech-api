@@ -14,9 +14,7 @@ module.exports = {
   before: {
     all: [
       when(
-        (hook) =>
-          hook.params.provider &&
-          `/${hook.path}` !== hook.app.get('authentication').path,
+        (hook) => hook.params.provider && `${hook.path}` !== 'authentication',
         authenticate,
         abilities(),
       ),
