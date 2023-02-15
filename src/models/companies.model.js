@@ -44,6 +44,9 @@ module.exports = function (app) {
             table.increments('id');
             table.string('name');
             table.enum('status', ['active', 'inactive']).defaultTo('active');
+            table.string('email');
+            table.string('phone');
+            table.string('meta_owner_name');
             table.timestamp('deletedAt').nullable();
             table.timestamp('createdAt');
             table.timestamp('updatedAt');

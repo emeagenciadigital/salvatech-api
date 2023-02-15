@@ -32,9 +32,6 @@ async function defineAbilitiesFor(user, context) {
     can('manage', ['all']);
   }
 
-  can(READ, [USERS]);
-  can('manage', [USERS]);
-
   if (process.env.NODE_ENV !== 'production') {
     // can('create', ['users']);
   }

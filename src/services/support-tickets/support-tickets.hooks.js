@@ -1,5 +1,6 @@
 const registerUser = require('./hooks/register-user');
 const {fastJoin} = require('feathers-hooks-common');
+const searchAdminByQ = require('./hooks/search-admin-by-q');
 
 const joinsResolves = {
   joins: {
@@ -25,6 +26,11 @@ const joinsResolves = {
             'profession_name',
             'about_me',
             'website_url',
+            'phone_country_code',
+            'phone',
+            'path_avatar',
+            'phone_country_code',
+            'phone',
           )
           .where({id: records.user_id, deletedAt: null})
           .then((it) => it[0]),
@@ -36,7 +42,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [searchAdminByQ()],
     get: [],
     create: [registerUser()],
     update: [],

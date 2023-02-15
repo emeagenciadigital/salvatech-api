@@ -1,3 +1,4 @@
+const searchAdminByQ = require('./hooks/search-admin-by-q');
 const {fastJoin} = require('feathers-hooks-common');
 
 const joinsResolves = {
@@ -18,7 +19,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [searchAdminByQ()],
     get: [],
     create: [],
     update: [],

@@ -4,11 +4,12 @@ const {hashPassword, protect} =
   require('@feathersjs/authentication-local').hooks;
 const registerRecordsByDefault = require('../users/hooks/register-records-by-defaults');
 const registerRecordsByDefaultPatch = require('../users/hooks/register-records-by-defaults-patch');
+const searchAdminByq = require('./hooks/search-admin-by-q');
 
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [searchAdminByq()],
     get: [],
     create: [hashPassword('password'), registerRecordsByDefault()],
     update: [hashPassword('password'), registerRecordsByDefaultPatch()],

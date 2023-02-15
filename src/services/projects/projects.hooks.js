@@ -25,6 +25,9 @@ const joinsResolves = {
             'profession_name',
             'about_me',
             'website_url',
+            'path_avatar',
+            'phone_country_code',
+            'phone',
           )
           .where({id: records.created_by_user_id, deletedAt: null})
           .then((it) => it[0]),

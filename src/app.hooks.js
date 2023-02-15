@@ -9,6 +9,20 @@ const {
 } = require('feathers-hooks-common');
 const authenticate = require('./hooks/authenticate');
 const abilities = require('./hooks/abilities');
+const removeSoftDelete = require('./hooks/remove-softdelete');
+
+const deleted = softDelete({
+  // context is the normal hook context
+  deletedQuery: async (context) => {
+    if (context.service.getModel) {
+      const field = `${context.service.getModel().tableName}.deletedAt`;
+      return {[field]: null};
+    }
+  },
+  removeData: async (context) => {
+    return {deletedAt: new Date().toISOString()};
+  },
+});
 
 module.exports = {
   before: {
@@ -18,17 +32,8 @@ module.exports = {
         authenticate,
         abilities(),
       ),
-      softDelete({
-        // context is the normal hook context
-        deletedQuery: async (context) => {
-          return {deletedAt: null};
-        },
-        removeData: async (context) => {
-          return {deletedAt: new Date()};
-        },
-      }),
     ],
-    find: [],
+    find: [deleted],
     get: [],
     create: [
       (context) => {
@@ -37,8 +42,8 @@ module.exports = {
       },
     ],
     update: [],
-    patch: [],
-    remove: [],
+    patch: [deleted],
+    remove: [removeSoftDelete()],
   },
 
   after: {
