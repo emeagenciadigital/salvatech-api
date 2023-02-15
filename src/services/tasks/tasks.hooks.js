@@ -1,8 +1,12 @@
 const {fastJoin} = require('feathers-hooks-common');
+const {paramsFromClient} = require('feathers-hooks-common');
+const queryTaskTeamProgress = require('./hooks/query-task-team-progress');
 
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
+      const {skipJoins} = context;
+      if (skipJoins) return context;
       [records.company, records.user, records.project] = await Promise.all([
         context.app
           .service('companies')
@@ -41,7 +45,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [paramsFromClient('teamProgress'), queryTaskTeamProgress()],
     get: [],
     create: [],
     update: [],
