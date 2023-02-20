@@ -30,6 +30,14 @@ class Users extends Model {
           type: 'string',
           enum: ['junior', 'mid_level', 'senior'],
         },
+        status: {
+          type: 'string',
+          enum: ['active', 'inactive'],
+        },
+        current_status: {
+          type: 'string',
+          enum: ['online', 'offline'],
+        },
         profession_id: {type: 'integer'},
         profession_name: {type: 'string'},
         last_activity_date: {type: 'string'},
@@ -90,6 +98,8 @@ module.exports = function (app) {
             table
               .enum('level_of_seniority', ['junior', 'mid_level', 'senior'])
               .nullable();
+            table.enum('status', ['active', 'inactive']).nullable();
+            table.enum('current_status', ['online', 'offline']).nullable();
             table.integer('profession_id').nullable();
             table.string('profession_name');
             table.dateTime('last_activity_date');

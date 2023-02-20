@@ -19,6 +19,7 @@ const supportTickets = require('./support-tickets/support-tickets.service.js');
 const projects = require('./projects/projects.service.js');
 const projectUsers = require('./project-users/project-users.service.js');
 const requestMemberSkills = require('./request_member_skills/request_member_skills.service.js');
+const userActivitiesLogs = require('./user-activities-logs/user-activities-logs.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(users);
@@ -42,4 +43,5 @@ module.exports = function (app) {
   app.configure(projects);
   app.configure(projectUsers);
   app.configure(requestMemberSkills);
+  app.configure(userActivitiesLogs);
 };

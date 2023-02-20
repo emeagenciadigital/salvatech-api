@@ -12,7 +12,7 @@ module.exports = function (options = {}) {
 
     // Get the authenticated user.
     // eslint-disable-next-line no-unused-vars
-    const {user} = context.params;
+    const {user, skillsIds} = context.params;
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
@@ -26,6 +26,27 @@ module.exports = function (options = {}) {
         .getModel()
         .query()
         .select('users.id')
+        .orWhere('users.first_name', 'LIKE', `%${value}%`)
+        .orWhere('users.last_name', 'LIKE', `%${value}%`)
+        .orWhere('users.phone', 'LIKE', `%${value}%`)
+        .orWhere('users.email', 'LIKE', `%${value}%`)
+        .where({'users.deletedAt': null})
+        .then((it) => it.map((it) => it.id));
+
+      context.params.query['id'] = {$in: usersIds};
+    }
+
+    if (user.main_role === 'admin' && skillsIds) {
+      const value = context.params.query.q;
+      delete context.params.query.q;
+
+      const usersIds = await context.app
+        .service('users')
+        .getModel()
+        .query()
+        .select('users.id')
+        .innerJoin('users_skills', 'users.id', '=', 'users_skills.user_id')
+        .whereIn('users_skills.skill_id', skillsIds)
         .orWhere('users.first_name', 'LIKE', `%${value}%`)
         .orWhere('users.last_name', 'LIKE', `%${value}%`)
         .orWhere('users.phone', 'LIKE', `%${value}%`)
