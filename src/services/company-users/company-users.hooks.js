@@ -37,13 +37,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [
-      (context) => {
-        console.log(context.data);
-      },
-
-      registerRecordsByDefaults(),
-    ],
+    create: [registerRecordsByDefaults()],
     update: [],
     patch: [],
     remove: [],

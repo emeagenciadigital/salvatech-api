@@ -17,7 +17,7 @@ module.exports = function (options = {}) {
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
 
-    if (context.params.query.q && user.main_role === 'admin') {
+    if (context.params.query.q && user && user.main_role === 'admin') {
       const value = context.params.query.q;
       delete context.params.query.q;
 
@@ -36,7 +36,7 @@ module.exports = function (options = {}) {
       context.params.query['id'] = {$in: usersIds};
     }
 
-    if (user.main_role === 'admin' && skillsIds) {
+    if (user && user.main_role === 'admin' && skillsIds) {
       const value = context.params.query.q;
       delete context.params.query.q;
 

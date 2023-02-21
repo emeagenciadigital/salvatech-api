@@ -18,7 +18,7 @@ module.exports = function (options = {user_id, company_id}) {
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
     console.log(user);
-    const isAdmin = user.main_role === ROLE_ADMIN;
+    const isAdmin = user && user.main_role === ROLE_ADMIN;
 
     const getCompanyUser = ({company_id, user_id}) =>
       context.app
