@@ -1,9 +1,11 @@
 const registerRecordsByDefaults = require('./hooks/register-records-by-defaults');
-const {fastJoin} = require('feathers-hooks-common');
+const {fastJoin, paramsFromClient} = require('feathers-hooks-common');
 
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
+      const knex = context.app.get('knex');
+      const {withAdditionalData} = context.params;
       if (records.company_id)
         records.company = await context.app
           .service('companies')
@@ -28,6 +30,19 @@ const joinsResolves = {
         )
         .where({id: records.user_id, deletedAt: null})
         .then((it) => it[0]);
+      if (withAdditionalData) {
+        const query = `SELECT status,
+       SEC_TO_TIME(SUM(TIMEDIFF(IF(until_status, until_status, CURRENT_TIMESTAMP()), createdAt))) AS total,
+       CURRENT_TIMESTAMP()
+          FROM user_activities_logs
+          WHERE status = 'online'
+            and deletedAt is null
+            and createdAt > CONCAT(CURRENT_DATE(), ' 00:00:00')
+            and user_id = ${records.user_id}`;
+        records.totalsTodayHours = await knex
+          .raw(query)
+          .then((it) => it[0][0].total);
+      }
     },
   },
 };
@@ -35,7 +50,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [paramsFromClient('withAdditionalData')],
     get: [],
     create: [registerRecordsByDefaults()],
     update: [],

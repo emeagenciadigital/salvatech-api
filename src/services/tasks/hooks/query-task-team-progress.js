@@ -18,6 +18,8 @@ module.exports = function (options = {}) {
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
+    const {teamProgress} = context;
+    if (!teamProgress) return context;
 
     const query = `select (select count(*)
         from tasks
