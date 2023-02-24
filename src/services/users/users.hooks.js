@@ -6,6 +6,7 @@ const registerRecordsByDefault = require('../users/hooks/register-records-by-def
 const registerRecordsByDefaultPatch = require('../users/hooks/register-records-by-defaults-patch');
 const searchAdminByq = require('./hooks/search-admin-by-q');
 const {paramsFromClient, fastJoin} = require('feathers-hooks-common');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -38,7 +39,7 @@ module.exports = {
     create: [hashPassword('password'), registerRecordsByDefault()],
     update: [hashPassword('password'), registerRecordsByDefaultPatch()],
     patch: [hashPassword('password')],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

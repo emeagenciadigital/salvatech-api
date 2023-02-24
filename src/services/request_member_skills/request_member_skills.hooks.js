@@ -1,5 +1,6 @@
 const {fastJoin} = require('feathers-hooks-common');
 const registerSkillName = require('./hooks/register-skill-name');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -22,7 +23,7 @@ module.exports = {
     create: [registerSkillName()],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

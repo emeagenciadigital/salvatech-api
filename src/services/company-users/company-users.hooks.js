@@ -1,5 +1,6 @@
 const registerRecordsByDefaults = require('./hooks/register-records-by-defaults');
 const {fastJoin, paramsFromClient} = require('feathers-hooks-common');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -55,7 +56,7 @@ module.exports = {
     create: [registerRecordsByDefaults()],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

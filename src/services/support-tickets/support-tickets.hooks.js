@@ -1,6 +1,7 @@
 const registerUser = require('./hooks/register-user');
 const {fastJoin} = require('feathers-hooks-common');
 const searchAdminByQ = require('./hooks/search-admin-by-q');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -47,7 +48,7 @@ module.exports = {
     create: [registerUser()],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

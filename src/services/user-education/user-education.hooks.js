@@ -1,5 +1,6 @@
 const {fastJoin} = require('feathers-hooks-common');
 const {ROLE_ADMIN} = require('../../utils/constants');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -38,7 +39,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

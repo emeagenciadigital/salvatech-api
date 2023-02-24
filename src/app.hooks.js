@@ -9,7 +9,6 @@ const {
 } = require('feathers-hooks-common');
 const authenticate = require('./hooks/authenticate');
 const abilities = require('./hooks/abilities');
-const removeSoftDelete = require('./hooks/remove-softdelete');
 
 const deleted = softDelete({
   // context is the normal hook context
@@ -43,7 +42,7 @@ module.exports = {
     ],
     update: [],
     patch: [deleted],
-    remove: [removeSoftDelete()],
+    remove: [],
   },
 
   after: {

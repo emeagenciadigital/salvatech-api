@@ -1,5 +1,6 @@
 const searchAdminByQ = require('./hooks/search-admin-by-q');
 const {fastJoin} = require('feathers-hooks-common');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -24,7 +25,7 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

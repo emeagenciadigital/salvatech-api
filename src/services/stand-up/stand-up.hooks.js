@@ -1,5 +1,6 @@
 const registerMetaData = require('./hooks/register-meta-data');
 const {fastJoin} = require('feathers-hooks-common');
+const removeSoftDelete = require('../../hooks/remove-softdelete');
 
 const joinsResolves = {
   joins: {
@@ -43,7 +44,7 @@ module.exports = {
     create: [registerMetaData()],
     update: [],
     patch: [],
-    remove: [],
+    remove: [removeSoftDelete()],
   },
 
   after: {

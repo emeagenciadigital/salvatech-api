@@ -5,7 +5,9 @@ const {NotAcceptable} = require('@feathersjs/errors');
 module.exports = (options = {}) => {
   return async (context) => {
     const {path, id} = context;
+    if (path === 'company-users-wish-list') return context;
 
+    console.log('-----');
     if (id) {
       await context.app
         .service(`${path}`)

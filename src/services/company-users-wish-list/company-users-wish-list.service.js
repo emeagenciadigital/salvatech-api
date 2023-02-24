@@ -1,12 +1,13 @@
 // Initializes the `company users wish list` service on path `/company-users-wish-list`
-const { CompanyUsersWishList } = require('./company-users-wish-list.class');
+const {CompanyUsersWishList} = require('./company-users-wish-list.class');
 const createModel = require('../../models/company-users-wish-list.model');
 const hooks = require('./company-users-wish-list.hooks');
 
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate')
+    paginate: app.get('paginate'),
+    multi: ['remove'],
   };
 
   // Initialize our service with any options it requires
