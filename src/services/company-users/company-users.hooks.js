@@ -33,9 +33,10 @@ const joinsResolves = {
         .where({id: records.user_id, deletedAt: null})
         .then((it) => it[0]);
       if (withAdditionalData) {
-        const query = `SELECT status,
-       SEC_TO_TIME(SUM(TIMEDIFF(IF(until_status, until_status, CURRENT_TIMESTAMP()), createdAt))) AS total,
-       CURRENT_TIMESTAMP()
+        const query = `SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(
+              TIMEDIFF(IF(until_status, until_status, CURRENT_TIMESTAMP()), createdAt)
+          )))
+                 AS total
           FROM user_activities_logs
           WHERE status = 'online'
             and deletedAt is null

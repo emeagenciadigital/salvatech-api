@@ -118,6 +118,7 @@ module.exports = function (app) {
               'rejected',
               'accepted',
             ]);
+            table.enum('current_status', ['online', 'offline']);
             table.string('email').unique();
             table.timestamp('deletedAt').nullable();
             table.timestamp('createdAt');
