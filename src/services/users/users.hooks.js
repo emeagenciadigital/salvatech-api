@@ -1,5 +1,3 @@
-const {authenticate} = require('@feathersjs/authentication').hooks;
-
 const {hashPassword, protect} =
   require('@feathersjs/authentication-local').hooks;
 const registerRecordsByDefault = require('../users/hooks/register-records-by-defaults');
@@ -11,7 +9,7 @@ const removeSoftDelete = require('../../hooks/remove-softdelete');
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
-      const {isFavoriteCompanyId} = context.params;
+      const {isFavoriteCompanyId, skillsJoin} = context.params;
       const getIsFavorite = ({}) =>
         context.app
           .service('company-users-wish-list')
@@ -22,7 +20,15 @@ const joinsResolves = {
           .then((it) => it[0]);
 
       if (isFavoriteCompanyId) {
-        records.isFavorite = !!(await getIsFavorite({}));
+        const companyUserWishList = await getIsFavorite({});
+        records.company_users_wish_list = companyUserWishList;
+        records.isFavorite = !!companyUserWishList;
+      }
+      if (skillsJoin) {
+        records.skills = await context.app
+          .service('users-skills')
+          .find({query: {user_id: records.id}})
+          .then((it) => it.data);
       }
     },
   },
@@ -32,7 +38,7 @@ module.exports = {
   before: {
     all: [],
     find: [
-      paramsFromClient('skillsIds', 'isFavoriteCompanyId'),
+      paramsFromClient('skillsIds', 'isFavoriteCompanyId', 'skillsJoin'),
       searchAdminByq(),
     ],
     get: [],

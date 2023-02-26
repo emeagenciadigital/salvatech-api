@@ -1,10 +1,11 @@
 const {authenticate} = require('@feathersjs/authentication').hooks;
 const removeSoftDelete = require('../../hooks/remove-softdelete');
+const searchAdminByq = require('./hooks/search-admin-by-q');
 
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
-    find: [],
+    all: [],
+    find: [searchAdminByq()],
     get: [],
     create: [],
     update: [],

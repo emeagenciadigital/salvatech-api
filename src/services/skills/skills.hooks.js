@@ -1,9 +1,10 @@
 const removeSoftDelete = require('../../hooks/remove-softdelete');
+const searchAdminByQ = require('./hooks/search-admin-by-q');
 
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [searchAdminByQ()],
     get: [],
     create: [],
     update: [],

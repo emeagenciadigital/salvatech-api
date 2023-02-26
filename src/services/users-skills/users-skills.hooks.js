@@ -7,7 +7,7 @@ const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
       const {user} = context.params;
-      const isAdmin = user.main_role === ROLE_ADMIN;
+      const isAdmin = user && user.main_role === ROLE_ADMIN;
       if (isAdmin)
         records.user = await context.app
           .service('users')
