@@ -28,12 +28,10 @@ module.exports = function (options = {}) {
         .limit(1)
         .then((it) => it[0]);
 
-    const isAdmin = user.main_role === ROLE_ADMIN;
-
     const [toUser] = await Promise.all([
       getUser({user_id: records.to_user_id}),
       havePermissions({
-        user_id: records.from_user_id,
+        user_id: records.user.id,
         company_id: records.company_id,
       })(context),
       havePermissions({
