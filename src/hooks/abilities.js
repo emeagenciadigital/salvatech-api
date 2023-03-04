@@ -65,7 +65,7 @@ const getMyTasks = ({context, user_id}) =>
     .getModel()
     .query()
     .where({user_id: user_id, deletedAt: null})
-    .then((it) => it[0]);
+    .then((it) => it);
 
 async function defineAbilitiesFor(user, context) {
   const {rules, can} = AbilityBuilder.extract();
