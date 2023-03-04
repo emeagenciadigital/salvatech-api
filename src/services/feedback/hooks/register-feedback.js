@@ -42,7 +42,6 @@ module.exports = function (options = {}) {
       })(context),
     ]);
 
-    records.user_id = isAdmin ? records.user_id : user.id;
     records.to_user_avatar_path = toUser.path_avatar;
     records.from_user_avatar_path = toUser.path_avatar;
     records.meta_from_full_name = `${records.first_name} ${records.last_name}`;
