@@ -21,6 +21,14 @@ const joinsResolves = {
           .limit(1)
           .then((it) => it[0]);
 
+      const companyUsers = ({user_id}) =>
+        context.app
+          .service('company-users')
+          .getModel()
+          .query()
+          .where({user_id: user_id})
+          .then((it) => it);
+
       if (isFavoriteCompanyId) {
         const companyUserWishList = await getIsFavorite({});
         records.company_users_wish_list = companyUserWishList;
@@ -32,6 +40,8 @@ const joinsResolves = {
           .find({query: {user_id: records.id}})
           .then((it) => it.data);
       }
+
+      records.companies = await companyUsers({user_id: records.id});
     },
   },
 };
@@ -57,7 +67,7 @@ module.exports = {
       protect('password', 'otp_email_token', 'otp_phone_token'),
     ],
     find: [fastJoin(joinsResolves)],
-    get: [],
+    get: [fastJoin(joinsResolves)],
     create: [],
     update: [],
     patch: [registerActivityLogs()],
