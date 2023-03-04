@@ -1,10 +1,11 @@
 const {AbilityBuilder, createMongoAbility, Ability} = require('@casl/ability');
+const {$or} = require('@ucast/mongo2js');
 
 const {toMongoQuery} = require('@casl/mongoose');
 const {Forbidden} = require('@feathersjs/errors');
 const TYPE_KEY = Symbol.for('type');
 
-const READ = 'read';
+const READ = ['find', 'get'];
 const UPDATE = 'update';
 const DELETE = 'delete';
 const CREATE = 'create';
@@ -26,6 +27,7 @@ const REQUEST_MEMBERS = 'request-members';
 const STAND_UP = 'stand-up';
 const SUPPORT_TICKETS = 'support-tickets';
 const USER_WORK_EXPERIENCE = 'user-work-experience';
+const FEEDBACK = 'feedback';
 
 function subjectName(subject) {
   if (!subject || typeof subject === 'string') {
@@ -81,6 +83,13 @@ async function defineAbilitiesFor(user, context) {
   }
 
   if (user) {
+    can([CREATE], [FEEDBACK]);
+
+    console.log(user.id);
+    can(READ, FEEDBACK, {
+      $or: [{from_user_id: user.id}, {to_user_id: user.id}],
+    });
+
     can(READ, [PROFESSIONS, SKILLS]);
     can(
       MANAGE,
@@ -94,14 +103,14 @@ async function defineAbilitiesFor(user, context) {
         user_id: user.id,
       },
     );
-    can([READ, UPDATE], [TASK], {user_id: user.id});
+    can(READ, UPDATE, [TASK], {user_id: user.id});
 
     can([MANAGE], [TASK_TIME_TRACKING], {user_id: user.id});
 
     can([MANAGE], [USERS], {id: user.id});
     can([MANAGE], [PROJECT, TASK], {created_by_user_id: user.id});
 
-    can([READ], [PROJECT_USERS], {user_id: user.id});
+    can(READ, [PROJECT_USERS], {user_id: user.id});
 
     const myTasksIds = (await getMyTasks({context, user_id: user.id})).map(
       (it) => it.id,
@@ -150,7 +159,7 @@ async function defineAbilitiesFor(user, context) {
         MANAGE,
         ['company-onboardings-meetings', 'company-onboarding-files'],
         {
-          company_onboarding_id: {$in: [onboardingsIds]},
+          company_onboarding_id: {$in: onboardingsIds},
         },
       );
 

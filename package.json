@@ -49,6 +49,7 @@
     "@feathersjs/feathers": "^4.5.15",
     "@feathersjs/socketio": "^4.5.15",
     "@feathersjs/transport-commons": "^4.5.15",
+    "@ucast/mongo2js": "^1.3.4",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "feathers-casl": "^0.7.2",
