@@ -1,10 +1,12 @@
 const registerFeedBack = require('./hooks/register-feedback');
 const {disallow} = require('feathers-hooks-common');
+const tree = require('./hooks/tree');
+const {paramsFromClient} = require('feathers-hooks-common');
 
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [paramsFromClient('tree')],
     get: [],
     create: [registerFeedBack()],
     update: [disallow()],
@@ -14,7 +16,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [tree()],
     get: [],
     create: [],
     update: [],

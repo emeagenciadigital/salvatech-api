@@ -47,11 +47,30 @@ module.exports = function (app) {
         db.schema
           .createTable('feedback', (table) => {
             table.increments('id');
+            table.integer('parent_id');
             table
               .integer('from_user_id')
               .unsigned()
               .references('id')
               .inTable('users')
+              .index();
+            table
+              .integer('project_id')
+              .unsigned()
+              .references('id')
+              .inTable('projects')
+              .index();
+            table
+              .integer('task_id')
+              .unsigned()
+              .references('id')
+              .inTable('tasks')
+              .index();
+            table
+              .integer('company_id')
+              .unsigned()
+              .references('id')
+              .inTable('companies')
               .index();
             table
               .integer('to_user_id')

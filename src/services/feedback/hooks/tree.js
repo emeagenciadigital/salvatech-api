@@ -1,0 +1,56 @@
+// Use this hook to manipulate incoming or outgoing data.
+// For more information on hooks see: http://docs.feathersjs.com/api/hooks.html
+
+const {checkContext, getItems, replaceItems} = require('feathers-hooks-common');
+
+// eslint-disable-next-line no-unused-vars
+module.exports = function (options = {}) {
+  // Return the actual hook.
+  return async (context) => {
+    // Throw if the hook is being called from an unexpected location.
+    checkContext(context, null, ['find']);
+
+    // Get the authenticated user.
+    // eslint-disable-next-line no-unused-vars
+    const {user} = context.params;
+    // Get the record(s) from context.data (before), context.result.data or context.result (after).
+    // getItems always returns an array to simplify your processing.
+    const records = getItems(context);
+
+    const {tree} = context.params;
+
+    if (!tree) return context;
+
+    function construirArbolMensajes({records}) {
+      const mainFeedback = records.find(
+        (feedback) => feedback.parent_id === null,
+      );
+
+      const addResponses = (message) => {
+        message.responses = records.filter((m) => m.parent_id === message.id);
+        message.responses.forEach((m) => addResponses(m));
+      };
+
+      addResponses(mainFeedback);
+
+      return mainFeedback;
+    }
+
+    context.result = records.length ? construirArbolMensajes({records}) : [];
+
+    // context.result.data =
+    // const result = context.result.data.filter((it) => it.parent_id === null);
+
+    // context.result = result;
+
+    replaceItems(context, records);
+    // Best practice: hooks should always return the context.
+    return context;
+  };
+};
+
+// Throw on unrecoverable error.
+// eslint-disable-next-line no-unused-vars
+function error(msg) {
+  throw new Error(msg);
+}

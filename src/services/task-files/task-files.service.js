@@ -1,12 +1,13 @@
 // Initializes the `task files` service on path `/task-files`
-const { TaskFiles } = require('./task-files.class');
+const {TaskFiles} = require('./task-files.class');
 const createModel = require('../../models/task-files.model');
 const hooks = require('./task-files.hooks');
 
 module.exports = function (app) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate')
+    paginate: app.get('paginate'),
+    multi: ['create'],
   };
 
   // Initialize our service with any options it requires

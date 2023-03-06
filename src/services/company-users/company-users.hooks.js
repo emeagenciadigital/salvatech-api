@@ -1,6 +1,7 @@
 const registerRecordsByDefaults = require('./hooks/register-records-by-defaults');
 const {fastJoin, paramsFromClient} = require('feathers-hooks-common');
 const removeSoftDelete = require('../../hooks/remove-softdelete');
+const searchAdminByQ = require('./hooks/search-admin-by-q');
 
 const joinsResolves = {
   joins: {
@@ -29,6 +30,8 @@ const joinsResolves = {
           'about_me',
           'website_url',
           'path_avatar',
+          'last_activity_date',
+          'current_status',
         )
         .where({id: records.user_id, deletedAt: null})
         .then((it) => it[0]);
@@ -53,7 +56,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [paramsFromClient('withAdditionalData')],
+    find: [paramsFromClient('withAdditionalData'), searchAdminByQ()],
     get: [],
     create: [registerRecordsByDefaults()],
     update: [],
