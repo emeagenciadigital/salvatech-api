@@ -85,7 +85,6 @@ async function defineAbilitiesFor(user, context) {
   if (user) {
     can([CREATE], [FEEDBACK]);
 
-    console.log(user.id);
     can(READ, FEEDBACK, {
       $or: [{from_user_id: user.id}, {to_user_id: user.id}],
     });
