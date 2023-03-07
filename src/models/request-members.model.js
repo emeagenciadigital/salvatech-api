@@ -18,6 +18,7 @@ class RequestMembers extends Model {
         description: {type: 'string'},
         role_name: {type: 'string'},
         years_of_experience: {type: 'integer'},
+        skills: {type: 'text'},
       },
     };
   }
@@ -56,6 +57,7 @@ module.exports = function (app) {
             table.text('description', 'longText');
             table.string('role_name');
             table.integer('years_of_experience');
+            table.text('skills', 'longText');
             table.timestamp('deletedAt').nullable();
             table.timestamp('createdAt');
             table.timestamp('updatedAt');
