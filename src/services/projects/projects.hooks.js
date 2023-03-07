@@ -1,11 +1,14 @@
 const registerCreatedByUserId = require('./hooks/register-created-by-user');
-const {fastJoin} = require('feathers-hooks-common');
+const {fastJoin, paramsFromClient} = require('feathers-hooks-common');
 const removeSoftDelete = require('../../hooks/remove-softdelete');
 const searchAdminByQ = require('./hooks/search-admin-by-q');
+const totalTimeTracking = require('./hooks/total-time-tracking');
 
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
+      const skipJoins = context;
+      if (skipJoins) return context;
       [records.company, records.created_by_user] = await Promise.all([
         context.app
           .service('companies')
@@ -41,7 +44,11 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [searchAdminByQ()],
+    find: [
+      paramsFromClient('totalTimeTrack'),
+      searchAdminByQ(),
+      totalTimeTracking(),
+    ],
     get: [],
     create: [registerCreatedByUserId()],
     update: [],

@@ -1,12 +1,10 @@
 const removeSoftDelete = require('../../hooks/remove-softdelete');
-const {fastJoin, paramsFromClient} = require('feathers-hooks-common');
+const {fastJoin} = require('feathers-hooks-common');
 
 const joinsResolves = {
   joins: {
     join: () => async (records, context) => {
       const {user} = context.params;
-      const {withTotals} = context.params;
-      const knex = context.app.get('knex');
 
       records.user = await context.app
         .service('users')
@@ -27,18 +25,6 @@ const joinsResolves = {
         )
         .where({id: records.user_id, deletedAt: null})
         .then((it) => it[0]);
-
-      if (withTotals) {
-        const query = `select (select count(true) user_count
-            from project_users
-            where project_id = 1
-              and deletedAt is null) as user_count,
-           (select sum(seconds) as total_time_tracking from task_time_tracking where project_id = 1) as total_time_tracking
-          from projects
-          limit 1`;
-
-        records.totals = await knex.raw(query).then((it) => it[0][0]);
-      }
     },
   },
 };
@@ -46,7 +32,7 @@ const joinsResolves = {
 module.exports = {
   before: {
     all: [],
-    find: [paramsFromClient('withTotals')],
+    find: [],
     get: [],
     create: [],
     update: [],
