@@ -10,20 +10,15 @@ class Feedback extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: [
-        'from_user_avatar_path',
-        'from_user_id',
-        'to_user_id',
-        'feedback_hash',
-      ],
+      required: ['from_user_id', 'to_user_id'],
 
       properties: {
-        from_user_avatar_path: {type: 'text'},
-        to_user_avatar_path: {type: 'text'},
+        // from_user_avatar_path: {type: 'text'},
+        // to_user_avatar_path: {type: 'text'},
         from_user_id: {type: 'integer'},
         to_user_id: {type: 'integer'},
         feedback_hash: {type: 'string'},
-        message: {type: 'text'},
+        // message: {type: 'text'},
       },
     };
   }

@@ -58,6 +58,7 @@
     "feathers-objection": "^7.5.3",
     "feathers-swagger": "^2.0.0",
     "helmet": "^4.6.0",
+    "intuit-oauth": "^4.0.0",
     "knex": "^2.4.2",
     "mysql2": "^2.3.3",
     "objection": "^3.0.1",

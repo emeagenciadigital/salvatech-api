@@ -23,27 +23,30 @@ module.exports = function (options = {}) {
         .service('users')
         .getModel()
         .query()
-        .select('to_user_avatar_path', 'first_name', 'last_name', 'id')
+        .select('path_avatar', 'first_name', 'last_name', 'id')
         .where({id: user_id})
         .limit(1)
         .then((it) => it[0]);
 
-    const [toUser] = await Promise.all([
-      getUser({user_id: records.to_user_id}),
-      havePermissions({
-        user_id: records.user.id,
-        company_id: records.company_id,
-      })(context),
-      havePermissions({
-        user_id: records.to_user_id,
-        company_id: records.company_id,
-      })(context),
-    ]);
+    // const [toUser] = await Promise.all([
+    //   getUser({user_id: records.to_user_id}),
+    //   havePermissions({
+    //     user_id: records.from_user_id,
+    //     company_id: records.company_id,
+    //   })(context),
+    //   havePermissions({
+    //     user_id: records.to_user_id,
+    //     company_id: records.company_id,
+    //   })(context),
+    // ]);
 
-    records.to_user_avatar_path = toUser.path_avatar;
-    records.from_user_avatar_path = toUser.path_avatar;
-    records.meta_from_full_name = `${records.first_name} ${records.last_name}`;
-    records.meta_to_full_name = `${toUser.first_name} ${toUser.last_name}`;
+    console.log(user);
+    const fromUser = await getUser({user_id: records.from_user_id});
+
+    records.to_user_avatar_path = user.path_avatar;
+    records.from_user_avatar_path = fromUser.path_avatar;
+    records.meta_from_full_name = `${fromUser.first_name} ${fromUser.last_name}`;
+    records.meta_to_full_name = `${user.first_name} ${user.last_name}`;
 
     // Place the modified records back in the context.
     replaceItems(context, records);
