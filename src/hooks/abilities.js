@@ -28,6 +28,7 @@ const STAND_UP = 'stand-up';
 const SUPPORT_TICKETS = 'support-tickets';
 const USER_WORK_EXPERIENCE = 'user-work-experience';
 const FEEDBACK = 'feedback';
+const COMPANY_ONBOARDINGS = 'company-onboardings';
 
 function subjectName(subject) {
   if (!subject || typeof subject === 'string') {
@@ -76,6 +77,8 @@ async function defineAbilitiesFor(user, context) {
   const isAdmin = user && user.main_role === ROLE_ADMIN;
 
   can(CREATE, ['authentication']);
+
+  can(CREATE, [SUPPORT_TICKETS, STAND_UP]);
 
   if (isAdmin) {
     can('manage', ['all']);
@@ -134,6 +137,7 @@ async function defineAbilitiesFor(user, context) {
           STAND_UP,
           SUPPORT_TICKETS,
           TASK,
+          COMPANY_ONBOARDINGS,
         ],
         {
           company_id: companyUser.company_id,
@@ -164,6 +168,16 @@ async function defineAbilitiesFor(user, context) {
 
       can(MANAGE, ['requests-members-skills'], {
         request_member_id: {$in: requestMembersIds},
+      });
+    }
+
+    if (companyUser.role === 'employee') {
+      can(MANAGE, [PROJECT_USERS, PROJECT, STAND_UP, TASK], {
+        company_id: companyUser.company_id,
+      });
+
+      can(READ, [COMPANY_ONBOARDINGS], {
+        company_id: companyUser.company_id,
       });
     }
   }

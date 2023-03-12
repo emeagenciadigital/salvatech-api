@@ -12,14 +12,15 @@ module.exports = function (options = {}) {
     checkContext(context, null, ['find']);
 
     const knex = context.app.get('knex');
+    const {teamProgress} = context.params;
+    if (!teamProgress) return context;
+
     // Get the authenticated user.
     // eslint-disable-next-line no-unused-vars
     const {user} = context.params;
     // Get the record(s) from context.data (before), context.result.data or context.result (after).
     // getItems always returns an array to simplify your processing.
     const records = getItems(context);
-    const {teamProgress} = context;
-    if (!teamProgress) return context;
 
     const query = `select (select count(*)
         from tasks
@@ -40,6 +41,7 @@ module.exports = function (options = {}) {
     context.skipJoins = true;
     context.result = await knex.raw(query).then((it) => it[0][0]);
 
+    console.log('----');
     // Place the modified records back in the context.
     replaceItems(context, records);
     // Best practice: hooks should always return the context.

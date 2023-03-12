@@ -48,6 +48,36 @@ const joinsResolves = {
         records.totalsTodayHours = await knex
           .raw(query)
           .then((it) => it[0][0].total);
+
+        const query2 = `select count(true) as total
+            from tasks
+            where user_id = ${records.user_id}
+            and status = 'completed'`;
+        records.total_taks_completed = await knex
+          .raw(query2)
+          .then((it) => it[0][0].total);
+
+        const query3 = `select (select count(true) as total_online
+              from company_users cu
+                       INNER join users u on cu.id = u.id
+              where current_status = 'online'
+                and company_id = ${records.company_id}
+                and cu.deletedAt is null
+                and u.deletedAt is null
+             ) as total_online,
+             (select count(true) as total_online
+              from company_users cu
+                       INNER join users u on cu.id = u.id
+              where current_status = 'offline'
+                and company_id = ${records.company_id}
+                  and cu.deletedAt is null
+                  and u.deletedAt is null
+             ) as total_offline`;
+        const totalCurrentStatus = await knex
+          .raw(query3)
+          .then((it) => it[0][0]);
+
+        records.total_users_current_status = totalCurrentStatus;
       }
     },
   },
