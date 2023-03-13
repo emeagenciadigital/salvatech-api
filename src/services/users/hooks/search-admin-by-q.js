@@ -36,7 +36,7 @@ module.exports = function (options = {}) {
       context.params.query['id'] = {$in: usersIds};
     }
 
-    if (user && user.main_role === 'admin' && skillsIds) {
+    if (skillsIds) {
       const value = context.params.query.q;
       delete context.params.query.q;
 
