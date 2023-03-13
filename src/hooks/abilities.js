@@ -144,6 +144,8 @@ async function defineAbilitiesFor(user, context) {
         },
       );
 
+      can(READ, [USERS], {talent_pool_visibility: 'visible'});
+
       const onboardingsIds = (
         await getCompanyOnboardings({
           context,
