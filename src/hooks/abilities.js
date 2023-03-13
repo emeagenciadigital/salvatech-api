@@ -138,6 +138,7 @@ async function defineAbilitiesFor(user, context) {
           SUPPORT_TICKETS,
           TASK,
           COMPANY_ONBOARDINGS,
+          FEEDBACK,
         ],
         {
           company_id: companyUser.company_id,
