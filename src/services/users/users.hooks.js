@@ -59,7 +59,7 @@ module.exports = {
       paramsFromClient('skillsIds', 'isFavoriteCompanyId', 'skillsJoin'),
       searchAdminByq(),
     ],
-    get: [],
+    get: [paramsFromClient('skillsIds', 'isFavoriteCompanyId', 'skillsJoin')],
     create: [hashPassword('password'), registerRecordsByDefault()],
     update: [hashPassword('password'), registerRecordsByDefaultPatch()],
     patch: [hashPassword('password'), initialData()],
