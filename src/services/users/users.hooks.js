@@ -42,12 +42,10 @@ const joinsResolves = {
           .then((it) => it.data);
       }
 
-      if (skillsJoin) {
-        records.work_experience = await context.app
-          .service('user-work-experience')
-          .find({query: {user_id: records.id}})
-          .then((it) => it.data);
-      }
+      records.work_experience = await context.app
+        .service('user-work-experience')
+        .find({query: {user_id: records.id}})
+        .then((it) => it.data);
 
       records.companies = await companyUsers({user_id: records.id});
     },
