@@ -29,6 +29,7 @@ const SUPPORT_TICKETS = 'support-tickets';
 const USER_WORK_EXPERIENCE = 'user-work-experience';
 const FEEDBACK = 'feedback';
 const COMPANY_ONBOARDINGS = 'company-onboardings';
+const COMPANIES = 'companies';
 
 function subjectName(subject) {
   if (!subject || typeof subject === 'string') {
@@ -144,6 +145,8 @@ async function defineAbilitiesFor(user, context) {
           company_id: companyUser.company_id,
         },
       );
+
+      can([MANAGE], [COMPANIES], {id: companyUser.company_id});
 
       can(READ, [USERS], {talent_pool_visibility: 'visible'});
       can(READ, [USER_WORK_EXPERIENCE]);
