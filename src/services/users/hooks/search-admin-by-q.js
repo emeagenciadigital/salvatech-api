@@ -47,10 +47,7 @@ module.exports = function (options = {}) {
         .select('users.id')
         .innerJoin('users_skills', 'users.id', '=', 'users_skills.user_id')
         .whereIn('users_skills.skill_id', skillsIds)
-        .orWhere('users.first_name', 'LIKE', `%${value}%`)
-        .orWhere('users.last_name', 'LIKE', `%${value}%`)
-        .orWhere('users.phone', 'LIKE', `%${value}%`)
-        .orWhere('users.email', 'LIKE', `%${value}%`)
+
         .where({'users.deletedAt': null, 'users_skills.deletedAt': null})
         .then((it) => it.map((it) => it.id));
 
