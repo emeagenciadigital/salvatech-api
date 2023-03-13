@@ -27,7 +27,7 @@ module.exports = function (options = {}) {
             from project_users
             where project_id = ${context.params.query.project_id}
               and deletedAt is null) as user_count,
-           (select sum(seconds) as total_time_tracking from task_time_tracking where project_id = 1) as total_time_tracking
+           (select sum(seconds) as total_time_tracking from task_time_tracking where project_id = ${context.params.query.project_id}) as total_time_tracking
           from projects
           limit 1`;
 
