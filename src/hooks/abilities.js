@@ -13,7 +13,7 @@ const MANAGE = 'manage';
 
 const USERS = 'users';
 const COMPANY_USERS = 'company-users';
-const COMPANY_USERS_WISH_LIST = 'company-users-wish-list.model';
+const COMPANY_USERS_WISH_LIST = 'company-users-wish-list';
 const PROFESSIONS = 'professions';
 const SKILLS = 'skills';
 const USER_SKILLS = 'users-skills';
