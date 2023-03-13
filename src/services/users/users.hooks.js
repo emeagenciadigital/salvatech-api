@@ -7,6 +7,7 @@ const {paramsFromClient, fastJoin} = require('feathers-hooks-common');
 const removeSoftDelete = require('../../hooks/remove-softdelete');
 const initialData = require('./hooks/initial-data');
 const registerActivityLogs = require('./hooks/register-activity-logs');
+const updateLastActivity = require('./hooks/update-last_activity');
 
 const joinsResolves = {
   joins: {
@@ -70,7 +71,7 @@ module.exports = {
     get: [fastJoin(joinsResolves)],
     create: [],
     update: [],
-    patch: [registerActivityLogs()],
+    patch: [registerActivityLogs(), updateLastActivity()],
     remove: [],
   },
 
