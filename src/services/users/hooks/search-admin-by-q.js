@@ -51,7 +51,7 @@ module.exports = function (options = {}) {
         .orWhere('users.last_name', 'LIKE', `%${value}%`)
         .orWhere('users.phone', 'LIKE', `%${value}%`)
         .orWhere('users.email', 'LIKE', `%${value}%`)
-        .where({'users.deletedAt': null})
+        .where({'users.deletedAt': null, 'users_skills.deletedAt': null})
         .then((it) => it.map((it) => it.id));
 
       context.params.query['id'] = {$in: usersIds};
