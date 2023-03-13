@@ -22,7 +22,7 @@ const TASK = 'task';
 const TASK_TIME_TRACKING = 'task-time-tracking';
 const TASK_FILES = 'task-files';
 const PROJECT_USERS = 'project-users';
-const PROJECT = 'project';
+const PROJECT = 'projects';
 const REQUEST_MEMBERS = 'request-members';
 const STAND_UP = 'stand-up';
 const SUPPORT_TICKETS = 'support-tickets';
@@ -174,6 +174,10 @@ async function defineAbilitiesFor(user, context) {
     if (companyUser.role === 'employee') {
       can(MANAGE, [PROJECT_USERS, PROJECT, STAND_UP, TASK], {
         company_id: companyUser.company_id,
+      });
+
+      can(MANAGE, [STAND_UP], {
+        user_id: user.id,
       });
 
       can(READ, [COMPANY_ONBOARDINGS], {

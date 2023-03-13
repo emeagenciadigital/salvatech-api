@@ -2,6 +2,7 @@ const {fastJoin} = require('feathers-hooks-common');
 const {paramsFromClient} = require('feathers-hooks-common');
 const queryTaskTeamProgress = require('./hooks/query-task-team-progress');
 const removeSoftDelete = require('../../hooks/remove-softdelete');
+const asingProject = require('./hooks/asing-project');
 
 const joinsResolves = {
   joins: {
@@ -61,7 +62,7 @@ module.exports = {
     all: [fastJoin(joinsResolves)],
     find: [],
     get: [],
-    create: [],
+    create: [asingProject()],
     update: [],
     patch: [],
     remove: [],
