@@ -22,10 +22,18 @@ const joinsResolves = {
   },
 };
 
+const feedbackNull = (context) => {
+  const queryInText = JSON.stringify(context.params.query);
+
+  const query = queryInText.replace('"null"', null);
+
+  context.params.query = JSON.parse(query);
+};
+
 module.exports = {
   before: {
     all: [],
-    find: [paramsFromClient('tree')],
+    find: [paramsFromClient('tree'), (e) => feedbackNull(e)],
     get: [],
     create: [registerFeedBack()],
     update: [disallow()],
